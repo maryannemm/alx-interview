@@ -1,20 +1,16 @@
 #!/usr/bin/python3
 
 def pascal_triangle(n):
-    if n <= 0:
-        return []
 
     triangle = []
-    
+    if type(n) is not int or n <= 0:
+        return triangle
     for i in range(n):
-        row = [1]  # Start each row with the first element as 1
-        if i > 0:  # Start calculating interior elements from the second row
-            last_row = triangle[i - 1]
-            for j in range(1, i):
-                # Each interior element is the sum of the two elements above it
-                row.append(last_row[j - 1] + last_row[j])
-            row.append(1)  # End each row with the last element as 1
-        triangle.append(row)
-    
+        line = []
+        for j in range(i + 1):
+            if j == 0 or j == i:
+                line.append(1)
+            elif i > 0 and j > 0:
+                line.append(triangle[i - 1][j - 1] + triangle[i - 1][j])
+        triangle.append(line)
     return triangle
-

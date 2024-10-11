@@ -1,32 +1,33 @@
 #!/usr/bin/python3
+'''LockBoxes Challenge'''
+
 def canUnlockAll(boxes):
-    # Initialize a set to keep track of visited boxes
-    visited = set()
-    # Start with the first box (index 0)
-    stack = [0]
-    
-    while stack:
-        # Get the current box index
-        current_box = stack.pop()
-        # Mark the current box as visited
-        if current_box not in visited:
-            visited.add(current_box)
-            # Add all keys found in the current box to the stack
-            for key in boxes[current_box]:
-                if key not in visited and key < len(boxes):
-                    stack.append(key)
-    
-    # Return True if all boxes are visited
-    return len(visited) == len(boxes)
+    '''Checks if all the boxes can be unlocked.
+    Returns:
+        True: if every box can be unlocked
+        False: if not all boxes can be unlocked
+    '''
+    total_boxes = len(boxes)
+    keys = set()  # To store the collected keys
+    unlocked_boxes = []  # Track which boxes are unlocked
+    current_box = 0
 
-# Test cases
-if __name__ == "__main__":
-    boxes = [[1], [2], [3], [4], []]
-    print(canUnlockAll(boxes))  # True
+    while current_box < total_boxes:
+        previous_box = current_box
+        unlocked_boxes.append(current_box)
+        keys.update(boxes[current_box])  # Add keys found in the current box
+        for key in keys:
+            if key != 0 and key < total_boxes and key not in unlocked_boxes:
+                current_box = key  # Move to the next box using a key
+                break
+        if previous_box != current_box:
+            continue
+        else:
+            break
 
-    boxes = [[1, 4, 6], [2], [0, 4, 1], [5, 6, 2], [3], [4, 1], [6]]
-    print(canUnlockAll(boxes))  # True
-
-    boxes = [[1, 4], [2], [0, 4, 1], [3], [], [4, 1], [5, 6]]
-    print(canUnlockAll(boxes))  # False
+    # Check if all boxes (except the first one) have been unlocked
+    for box_index in range(total_boxes):
+        if box_index not in unlocked_boxes and box_index != 0:
+            return False
+    return True
 

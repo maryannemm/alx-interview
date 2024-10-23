@@ -1,22 +1,31 @@
 #!/usr/bin/python3
+"""
+This script simulates log generation by writing formatted HTTP log entries to stdout.
+
+- It generates 10,000 logs, each with a random IP address.
+- Each log entry includes a timestamp, a randomly chosen HTTP status code, 
+  and a random byte size.
+- The script introduces random delays between log entries using `sleep()`.
+
+Modules:
+    random: Provides functions for generating random numbers.
+    sys: Provides access to system-specific parameters and functions.
+    time: Contains the sleep function to introduce a delay.
+    datetime: Provides the `datetime.now()` function to generate timestamps.
+"""
+
 import random
 import sys
-import datetime
 from time import sleep
+import datetime
 
-# Generate random log entries
 for i in range(10000):
-    sleep(random.random())  # Random sleep to simulate real-time logging
-    ip_address = "{:d}.{:d}.{:d}.{:d}".format(random.randint(1, 255), random.randint(1, 255), random.randint(1, 255), random.randint(1, 255))
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    method = "GET"
-    resource = "/projects/260"
-    protocol = "HTTP/1.1"
-    status_code = random.choice([200, 301, 400, 401, 403, 404, 405, 500])
-    file_size = random.randint(1, 1024)
-
-    # Format the log line and write to stdout
-    log_line = f"{ip_address} - [{timestamp}] \"{method} {resource} {protocol}\" {status_code} {file_size}\n"
-    sys.stdout.write(log_line)
-    sys.stdout.flush()
+    sleep(random.random())  # Introduce a random delay between 0 and 1 second
+    sys.stdout.write("{:d}.{:d}.{:d}.{:d} - [{}] \"GET /projects/260 HTTP/1.1\" {} {}\n".format(
+        random.randint(1, 255), random.randint(1, 255), random.randint(1, 255), random.randint(1, 255),  # Random IP address
+        datetime.datetime.now(),  # Current timestamp
+        random.choice([200, 301, 400, 401, 403, 404, 405, 500]),  # Random HTTP status code
+        random.randint(1, 1024)  # Random byte size
+    ))
+    sys.stdout.flush()  # Flush output to ensure it appears immediately
 

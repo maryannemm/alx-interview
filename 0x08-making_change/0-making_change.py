@@ -1,33 +1,32 @@
 #!/usr/bin/python3
-def makeChange(coins, total):
+"""Solution to the Making Change problem."""
+
+
+def make_change(coins, total):
     """
-    Determine the fewest number of coins needed to meet a given amount total.
+    Calculate the minimum number of coins needed to reach a given total.
 
     Args:
-        coins (list): List of the values of coins in possession.
-        total (int): Total amount to achieve with coins.
+        coins (list): The denominations of available coins.
+        total (int): The target amount to achieve.
 
     Returns:
-        int: Fewest number of coins needed to meet total,
-             or -1 if total cannot be achieved.
+        int: The minimum number of coins needed, or -1 if it's not possible.
     """
     if total <= 0:
         return 0
 
-    coins.sort(reverse=True)  # Sort coins in descending order
-    count = 0
+    coins.sort(reverse=True)
+    coin_count = 0
     remaining = total
 
     for coin in coins:
-        if remaining <= 0:
-            break
-        # Use as many of the current coin as possible
-        count += remaining // coin
-        remaining %= coin
+        if coin <= remaining:
+            count = remaining // coin
+            coin_count += count
+            remaining -= count * coin
+        if remaining == 0:
+            return coin_count
 
-    # If there's remaining amount that cannot be met
-    if remaining != 0:
-        return -1
-
-    return count
+    return -1
 

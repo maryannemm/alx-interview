@@ -1,51 +1,50 @@
 #!/usr/bin/python3
-def isWinner(x, nums):
+"""
+Defines the `find_winner` function to solve the Prime Game problem.
+"""
+
+def primes(limit):
     """
-    Determines the winner of the Prime Game after x rounds.
-    :param x: Number of rounds.
-    :param nums: List of n for each round.
-    :return: Name of the player with the most wins, or None if it's a tie.
+    Generates a list of prime numbers up to a specified limit.
+    Args:
+        limit (int): The maximum value for generating primes.
+    Returns:
+        list: A list containing all prime numbers from 1 to `limit` (inclusive).
     """
-    if not nums or x < 1:
-        return None
-
-    # Precompute primes up to the maximum number in nums
-    max_n = max(nums)
-    primes = sieve_of_eratosthenes(max_n)
-
-    # Count the total wins for Maria and Ben
-    maria_wins = 0
-    ben_wins = 0
-
-    for n in nums:
-        prime_count = sum(primes[:n + 1])
-        # Maria wins if prime_count is odd; otherwise, Ben wins
-        if prime_count % 2 == 1:
-            maria_wins += 1
-        else:
-            ben_wins += 1
-
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
-    else:
-        return None
-
-
-def sieve_of_eratosthenes(n):
-    """
-    Generates a list indicating primality of numbers up to n using Sieve of Eratosthenes.
-    :param n: The maximum number to check for primality.
-    :return: List where index i is True if i is prime, False otherwise.
-    """
-    sieve = [True] * (n + 1)
-    sieve[0] = sieve[1] = False  # 0 and 1 are not prime numbers
-
-    for i in range(2, int(n**0.5) + 1):
-        if sieve[i]:
-            for multiple in range(i * i, n + 1, i):
+    primes_list = []
+    sieve = [True] * (limit + 1)
+    for num in range(2, limit + 1):
+        if sieve[num]:
+            primes_list.append(num)
+            for multiple in range(num, limit + 1, num):
                 sieve[multiple] = False
+    return primes_list
 
-    return sieve
+def isWinner(rounds, numbers):
+    """
+    Determines the winner of the Prime Game based on rounds and ranges.
+    Args:
+        rounds (int): The number of game rounds.
+        numbers (list): A list of upper bounds for each round.
+    Returns:
+        str: The winner's name ('Maria' or 'Ben'), or None if no clear winner.
+    """
+    if not rounds or not numbers or rounds == 0 or not isinstance(numbers, list):
+        return None
+
+    maria_score = 0
+    ben_score = 0
+
+    for i in range(rounds):
+        primes_count = len(primes(numbers[i]))
+        if primes_count % 2 == 0:
+            ben_score += 1
+        else:
+            maria_score += 1
+
+    if maria_score > ben_score:
+        return 'Maria'
+    elif ben_score > maria_score:
+        return 'Ben'
+    return None
 
